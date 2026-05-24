@@ -3,7 +3,7 @@ import logo from "@/app/assets/logo.svg"
 import mulher from "@/app/assets/mulher.png"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check } from "lucide-react";
+import { Check, MenuIcon } from "lucide-react";
 import {
   Card,
   CardAction,
@@ -14,21 +14,47 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+
+
 export default function Home() {
   return (
     <main>
-      <section className="container mx-auto text-center pb-20">
+      <section className="container mx-auto text-center pb-20 px-2 md:px-0">
         <nav className="flex justify-between items-center py-4">
           <Image src={logo} alt="logo" />
-          <div className="flex items-center gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <MenuIcon className="md:hidden cursor-pointer" size={24} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Menu</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Funcionamento</DropdownMenuItem>
+                <DropdownMenuItem>Preço</DropdownMenuItem>
+                <DropdownMenuItem><Button variant={'bg-white'}>Login</Button></DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <div className="items-center gap-4 hidden md:flex">
             <Button variant={'link'}>Funcionamento</Button>
             <Button variant={'link'}>Preço</Button>
             <Button variant={'bg-white'}>Login</Button>
           </div>
         </nav>
-        <h1 className="text-5xl md:text-6xl font-bold mt-16">Simplifique seus estudos</h1>
-        <p className="text-gray-500 mt-4 text-lg md:text-xl max-w-2xl mx-auto">Deixe que nós fazermos a curadoria para você. Assine nossa plataforma e receba todos os meses um ebook novo de programação.</p>
-        <form className="mt-10">
+        <h1 className="md:text-6xl text-2xl font-bold mt-8 md:mt-16">Simplifique seus estudos</h1>
+        <p className="text-gray-500 mt-4 text-sm md:text-xl max-w-2xl mx-auto">Deixe que nós fazermos a curadoria para você. Assine nossa plataforma e receba todos os meses um ebook novo de programação.</p>
+        <form className="md:mt-16 mt-10">
           <div className="flex gap-3 justify-center ">
             <Input
               type="email"
@@ -40,12 +66,12 @@ export default function Home() {
           <p className="text-xs text-muted-foreground mt-2">Comece sua assinatura agora mesmo</p>
         </form>
       </section>
-      <section className="bg-white py-16">
+      <section className="bg-white md:py-16 py-8">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center">Como funciona</h2>
-          <div className="flex items-center justify-center gap-16 mt-16">
-            <Image src={mulher} alt="mulher carregando caixas" className="max-w-xs md:max-w-sm" />
-            <ul className="text-lg md:text-xl text-muted-foreground space-y-6 w-full max-w-sm">
+          <h2 className="md:text-4xl text-2xl font-bold text-center">Como funciona</h2>
+          <div className="flex flex-col md:flex-row items-center justify-center mx-24 xl:mx-80">
+            <Image src={mulher} alt="mulher carregando caixas" className="max-w-xs md:max-w-sm mb-10 md:mb-0 md:mr-40" />
+            <ul className="text-lg md:text-2xl text-muted-foreground space-y-3 md:space-y-6 w-full max-w-sm">
               <li className="flex items-center justify-between gap-4">Acesso a 1 ebook por mês <Check className="text-green-600 w-6 h-6" /></li>
               <li className="flex items-center justify-between gap-4">Curadoria especial <Check className="text-green-600 w-6 h-6" /></li>
               <li className="flex items-center justify-between gap-4">Cancele quando quiser <Check className="text-green-600 w-6 h-6" /></li>
@@ -53,9 +79,9 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="text-center py-16">
-        <h2 className="text-4xl md:text-5xl font-bold mt-16">Preço simples e transparente</h2>
-        <p className="text-gray-500 mt-4 text-lg md:text-xl max-w-2xl mx-auto">
+      <section className="text-center md:py-16 py-8 px-2 md:px-0">
+        <h2 className="md:text-6xl text-2xl font-bold mt-16">Preço simples e transparente</h2>
+        <p className="text-gray-500 mt-4 text-sm md:text-xl max-w-2xl mx-auto">
           Pra que inúmeros planos quando nós sabemos exatamente o que é melhor para você? Assine o nosso plano mensal Pro Premium VIP e garanta mensalmente um ebook novo de programação. E por menos de um café por dia.
         </p>
         <Card className="w-[350px] mx-auto mt-10 text-left">
@@ -77,9 +103,9 @@ export default function Home() {
           </CardFooter>
         </Card>
       </section>
-      <section className="bg-white text-center py-16">
-        <h2 className="text-4xl md:text-5xl font-bold mt-16">Pronto para mudar sua vida</h2>
-        <p className="text-gray-500 mt-4 text-lg md:text-xl max-w-2xl mx-auto">Faça como milhares de outras pessoas. Assine nosso produto e tenha garantido seus estudos </p>
+      <section className="bg-white text-center md:py-16 py-8">
+        <h2 className="md:text-6xl text-2xl font-bold md:mt-16">Pronto para mudar sua vida</h2>
+        <p className="text-gray-500 mt-4 text-sm md:text-xl max-w-2xl mx-auto">Faça como milhares de outras pessoas. Assine nosso produto e tenha garantido seus estudos </p>
         <Button className="mt-10 w-full max-w-xs h-12 text-lg">Assine agora</Button>
         <p className="text-xs text-muted-foreground mt-2">Comece sua assinatura agora mesmo. Cancele quando quiser</p>
         <footer className="mt-16 border-t border-gray-300 pt-10">

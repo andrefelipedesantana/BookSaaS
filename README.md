@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LivroSaaS 📚✨
 
-## Getting Started
+Construí um projeto chamado **LivroSaaS**, uma plataforma de assinatura onde o usuário tem acesso a ebooks mensais sobre programação de forma simples e direta. O principal objetivo prático deste projeto para mim foi conhecer e aprender sobre integração de ferramentas robustas de mercado, com foco especial no **Stripe** para pagamentos e no **Supabase** como banco de dados escalável.
 
-First, run the development server:
+## 🛠️ Tecnologias Utilizadas
 
+- **Frontend:** Next.js (App Router), React, Tailwind CSS
+- **Componentes & Ícones:** shadcn/ui, Lucide React
+- **Banco de Dados:** Supabase (PostgreSQL)
+- **ORM / Conexão DB:** Prisma
+- **Autenticação:** NextAuth.js
+- **Pagamentos & Assinaturas:** Stripe (Embedded Checkout & Customer Portal)
+
+## ⚙️ Como configurar e rodar localmente
+
+Siga os passos abaixo para rodar a aplicação na sua máquina:
+
+1. **Clone o repositório:**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/andrefelipedesantana/BookSaaS.git
+cd BookSaaS
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Instale as dependências:**
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Configure as variáveis de ambiente:** 
+Crie um arquivo `.env` na raiz do projeto com as suas chaves do Stripe, Supabase e NextAuth:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://seu-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-anon-key
+DATABASE_URL=postgresql://postgres:[SENHA]@db.seu-id.supabase.co:5432/postgres
+DIRECT_URL=postgresql://postgres:[SENHA]@db.seu-id.supabase.co:5432/postgres
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PRICE_ID=price_...
+STRIPE_CUSTOMER_PORTAL_URL=https://billing.stripe.com/...
 
-## Learn More
+AUTH_SECRET=sua-chave-secreta-do-next-auth
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Prepare o Banco de Dados:**
+Rode as migrações do Prisma para criar as tabelas no Supabase:
+```bash
+npx prisma migrate dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. **Inicie o servidor de desenvolvimento:**
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+6. **Acesse no navegador:** Abra `http://localhost:3000` para ver o site funcionando.
 
-## Deploy on Vercel
+## 💳 Integração com Stripe e Supabase
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Uma das maiores vantagens dessa arquitetura é lidar com lógica de negócios complexa de forma organizada e segura, separando as responsabilidades. 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Visão Geral do Fluxo
+
+**1. Supabase como Single Source of Truth:**
+Utilizei o Supabase (PostgreSQL) integrado ao Prisma para gerenciar nossos usuários e guardar o estado da aplicação. A troca do SQLite local para o Supabase me permitiu entender a dinâmica de um banco relacional em nuvem, rodando migrações remotamente e separando o ambiente de desenvolvimento do banco local.
+
+**2. Fluxo de Assinatura (Stripe Embedded Checkout):**
+A conversão do usuário acontece sem sair do ecossistema do app.
+- O usuário clica em "Assinar".
+- O Next.js (via Server Actions / Route Handlers) se comunica com a API do Stripe e cria uma "Checkout Session".
+- O Stripe devolve um `client_secret`, que é passado para o componente `<EmbeddedCheckout />`, renderizando o formulário de pagamento dentro de um Modal (`Dialog`) nativo do site.
+
+**3. Gestão e Cancelamento:**
+Criei painéis onde o usuário gerencia a própria assinatura:
+- **Painel de Faturamento:** Um link direto para o Stripe Customer Portal, onde o usuário troca cartão e baixa notas fiscais.
+- **Cancelamento Direto:** Uma Server Action segura (`cancel-subscription.ts`) que usa a SDK do Stripe para buscar o ID da assinatura do usuário logado e executar o comando de cancelamento instantâneo via código, seguido de uma revalidação inteligente do layout usando o `revalidatePath` do Next.js.

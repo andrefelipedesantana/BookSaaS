@@ -15,11 +15,14 @@ import Link from 'next/link';
 import logo from './assets/logo.svg';
 import womanImg from './assets/woman.svg';
 import { auth } from '../../auth';
+import { fetchSubscriptionByEmail } from '@/lib/stripe';
+import { cn } from '@/lib/utils';
 
 export default async function Home() {
 
   const session = await auth();
 
+  const subscription = await fetchSubscriptionByEmail(session?.user?.email as string);
 
   return (
     <main>
@@ -72,19 +75,21 @@ export default async function Home() {
           Deixe que nós fazemos a curadoria para você. Assine nossa plataforma e
           receba todos os meses um ebook novo de programação.
         </p>
-        <form className="md:mt-16 mt-10">
-          <div className="flex gap-2 justify-center">
-            <Input
-              placeholder="Coloque seu email"
-              type="text"
-              className="max-w-sm border-gray-300 border"
-            />
-            <Button>Assine Agora</Button>
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            Comece sua assinatura agora mesmo. Cancele quando quiser.{' '}
-          </p>
-        </form>
+        {!subscription && (
+          <form className="md:mt-16 mt-10">
+            <div className="flex gap-2 justify-center">
+              <Input
+                placeholder="Coloque seu email"
+                type="text"
+                className="max-w-sm border-gray-300 border"
+              />
+              <Button>Assine Agora</Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Comece sua assinatura agora mesmo. Cancele quando quiser.{' '}
+            </p>
+          </form>
+        )}
       </section>
       <section className="bg-white md:py-16 py-8" id="funcionamento">
         <div className="container mx-auto">
@@ -129,25 +134,27 @@ export default async function Home() {
           <PricingCard />
         </div>
       </section>
-      <section className="bg-white md:py-16 py-10 text-center">
-        <h2 className="md:text-6xl text-2xl font-bold md:mt-16">
-          Pronto Para Mudar Sua Vida?
-        </h2>
-        <p className="text-gray-500 mt-4 text-sm md:text-xl max-w-3xl mx-auto">
-          Faça como milhares de outras pessoas. Assine nosso produto e tenha
-          garantido seus estudos{' '}
-        </p>
-        <Button className="mt-14 w-96">Assine Agora</Button>
-        <p className="text-xs text-muted-foreground mt-2">
-          Comece sua assinatura agora mesmo. Cancele quando quiser.{' '}
-        </p>
-        <footer className="mt-16 border-t border-gray-300 pt-10">
-          <Image src={logo} alt="Logotipo" className="mx-auto" />
-          <p className="text-muted-foreground">
-            © 2024 LivroSaaS. Todos os direitos reservados.
+      {!subscription && (
+        <section className="bg-white md:py-16 py-10 text-center">
+          <h2 className="md:text-6xl text-2xl font-bold md:mt-16">
+            Pronto Para Mudar Sua Vida?
+          </h2>
+          <p className="text-gray-500 mt-4 text-sm md:text-xl max-w-3xl mx-auto">
+            Faça como milhares de outras pessoas. Assine nosso produto e tenha
+            garantido seus estudos{' '}
           </p>
-        </footer>
-      </section>
+          <Button className="mt-14 w-96">Assine Agora</Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Comece sua assinatura agora mesmo. Cancele quando quiser.{' '}
+          </p>
+        </section>
+      )}
+      <footer className={cn("border-t border-gray-300 pt-10 pb-10", subscription ? "mt-16" : "mt-0")}>
+        <Image src={logo} alt="Logotipo" className="mx-auto" />
+        <p className="text-muted-foreground text-center">
+          © 2026 LivroSaaS. Todos os direitos reservados.
+        </p>
+      </footer>
     </main>
   );
 }

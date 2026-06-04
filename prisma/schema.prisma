@@ -5,12 +5,12 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 model user { 
   id    Int     @id @default(autoincrement()) 
   email String  @unique
-  name  String
+  name  String?
   password String
 } 

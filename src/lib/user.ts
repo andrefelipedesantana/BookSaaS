@@ -2,7 +2,7 @@ import db from "./db"
 import { compareSync } from "bcrypt-ts"
 
 type User = {
-    name: string;
+    name: string | null;
     email: string;
     password?: string;
 }
@@ -23,7 +23,7 @@ export async function findUserByCredentials(email: string, password: string): Pr
 
     if (isPasswordValid) {
         return {
-            name: user.name,
+            name: user.name || "",
             email: user.email,
         }
     }
